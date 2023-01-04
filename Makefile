@@ -6,7 +6,7 @@
 #    By: mbousouf <mbousouf@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/20 12:07:37 by mbousouf          #+#    #+#              #
-#    Updated: 2023/01/02 17:48:41 by mbousouf         ###   ########.fr        #
+#    Updated: 2023/01/04 11:30:07 by mbousouf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ FILES =	Pipex.c\
 		
 BOUNUS_FILES = pipex_bonus.c\
 			   pipex_bonus_utils.c\
+			   pipex_bonus_assets.c
 				
 OBJS =$(FILES:.c=.o)
 

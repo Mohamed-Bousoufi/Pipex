@@ -6,49 +6,35 @@
 /*   By: mbousouf <mbousouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 12:41:38 by mbousouf          #+#    #+#             */
-/*   Updated: 2023/01/02 12:27:26 by mbousouf         ###   ########.fr       */
+/*   Updated: 2023/01/04 14:02:55 by mbousouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-char	*ft_malloc(int size)
+int	ft_pipe(int fd[2])
 {
-	char	*s;
-
-	s = malloc(size);
-	if (!s)
+	if (pipe(fd) == -1)
 	{
-		free(s);
-		perror(" !!!allocation ");
+		perror("Cant' Not creat pipe ");
 		exit(errno);
 	}
-	return (s);
+	else
+		return (0);
 }
 
-void	frepath(char **cmd)
+int	ft_fork(void)
 {
-	int	j;
+	int	pid;
 
-	j = 0;
-	while (cmd[j])
+	pid = fork();
+	if (pid < 0)
 	{
-		free(cmd[j]);
-		j++;
+		perror("Cant ' Not creat fork");
+		exit(errno);
 	}
-	free(cmd);
-	cmd = NULL;
-}
-
-char	*f_slach(char *ar)
-{
-	char	**tab;
-	char	*str;
-
-	tab = ft_split(ar, ' ');
-	str = ft_strjoin("/", tab[0]);
-	frepath(tab);
-	return (str);
+	else
+		return (pid);
 }
 
 char	*ft_select(char **path)

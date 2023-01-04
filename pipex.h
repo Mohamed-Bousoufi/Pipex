@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pipex.h                                            :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbousouf <mbousouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 11:53:20 by mbousouf          #+#    #+#             */
-/*   Updated: 2023/01/02 17:35:33 by mbousouf         ###   ########.fr       */
+/*   Updated: 2023/01/04 11:33:58 by mbousouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@
 # include <fcntl.h>
 # include <errno.h>
 
-
-
 char	*pathcmd(char *argv, char **env);
-void	frepath(char ** cmd);
+void	frepath(char **cmd);
 char	*ft_select(char **path);
 char	*f_slach(char *ar);
-int     ft_pipe(int fd[2]);
-int     ft_fork(void);
+int		ft_pipe(int fd[2]);
+int		ft_fork(void);
 #endif

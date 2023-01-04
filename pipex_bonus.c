@@ -6,36 +6,19 @@
 /*   By: mbousouf <mbousouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 12:40:21 by mbousouf          #+#    #+#             */
-/*   Updated: 2023/01/02 17:13:02 by mbousouf         ###   ########.fr       */
+/*   Updated: 2023/01/04 15:39:21 by mbousouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-int	o_file(char *f, int op)
-{
-	int	ret;
-
-	ret = 0;
-	if (op == 1)
-		ret = open(f, O_RDONLY, 0777);
-	if (op == 2)
-		ret = open(f, O_RDWR|O_CREAT | O_TRUNC, 0777);
-	if (ret == -1)
-	{
-		perror("I/O File_Not_Found");
-		exit(errno);
-	}
-	return (ret);
-}
-
-void	ft_pipe(char *str, char **cmd, char **env, int *input_fd)
+void	get_pipe(char *str, char **cmd, char **env, int *input_fd)
 {
 	int		pipefd[2];
 	pid_t	pid;
 
-	pipe(pipefd);
-	pid = fork();
+	ft_pipe(pipefd);
+	pid = ft_fork();
 	if (pid == 0)
 	{
 		close(pipefd[0]);
@@ -57,13 +40,19 @@ void	ft_pipe(char *str, char **cmd, char **env, int *input_fd)
 	}
 }
 
-void ft_last(char *str, char **cmd, char **env, int *input_fd, int out_fd)
+void	ft_last(int a, char **argv, char **env, int *input_fd)
 {
 	pid_t	pid;
+	int		out_fd;
+	char	*str;
+	char	**cmd;
 
 	pid = fork();
 	if (pid == 0)
 	{
+	str = pathcmd(argv[a - 2], env);
+	cmd = ft_split(argv[a - 2], ' ');
+	out_fd = o_file(argv[a -1], 2);
 		dup2(*input_fd, STDIN_FILENO);
 		dup2(out_fd, STDOUT_FILENO);
 		close(*input_fd);
@@ -76,8 +65,7 @@ void ft_last(char *str, char **cmd, char **env, int *input_fd, int out_fd)
 	else
 	{
 		unlink("file");
-		close(*input_fd);
-		waitpid(pid,0,0);
+		waitpid(pid, 0, 0);
 	}
 }
 
@@ -107,13 +95,11 @@ int	herdoc(char **argv)
 	}
 	fd = o_file("file", 2);
 	write(fd, n, strlen(n));
-	free(n);
 	return (fd);
 }
 
 void	hart(int a, char **argv, char **env, int input_fd)
 {
-	int		out_fd;
 	int		i;
 	char	*str;
 	char	**p_cmd;
@@ -124,21 +110,16 @@ void	hart(int a, char **argv, char **env, int input_fd)
 		i = 2;
 		input_fd = o_file(argv[1], 1);
 	}
-	out_fd = o_file(argv[a -1], 2);
 	while (i < a - 2)
 	{
 		str = pathcmd(argv[i], env);
 		p_cmd = ft_split(argv[i], ' ');
-		ft_pipe(str, p_cmd, env, &input_fd);
+		get_pipe(str, p_cmd, env, &input_fd);
 		frepath(p_cmd);
 		free(str);
 		i++;
 	}
-	str = pathcmd(argv[a - 2], env);
-	p_cmd = ft_split(argv[a - 2], ' ');
-	ft_last(str, p_cmd, env, &input_fd, out_fd);
-	frepath(p_cmd);
-	free(str);
+	ft_last(a, argv, env, &input_fd);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -155,5 +136,7 @@ int	main(int argc, char **argv, char **env)
 		}
 		hart(argc, argv, env, fd);
 	}
+	else
+		perror("Number_command_Not_Correct");
 	return (0);
 }
